@@ -20,11 +20,55 @@
     DEALINGS IN THE SOFTWARE.
 */
 
+/* Includes ================================================================ */
+
 #include <stdio.h>
-#include <stdlib.h>
+
+#include <unistd.h>
+
+#include "yeotsh.h"
+
+/* Private Function Prototypes ============================================= */
+
+/* 셸을 초기화한다. */
+static void init_shell(void);
+
+/* 명령어를 읽고, 공백 문자를 기준으로 명령어를 한 단어씩 자른다. */
+static void read_and_parse(char **argv);
+
+/* Public Variables ======================================================== */
+
+/* POSIX 운영 체제에서 제공하는 환경 변수 목록. */
+extern char **environ;
+
+/* Private Variables ======================================================= */
+
+/* 셸의 프롬프트 메시지 (prompt message)를 나타내는 문자열. */
+static char *prompt = YS_MAIN_NON_ROOT_PROMPT;
+
+/* Public Functions ======================================================== */
 
 int main(void) {
-    /* TODO: ... */
+    init_shell();
+
+    for (;;) {
+        YS_PRINTF(prompt);
+
+        // TODO: ...
+    }
 
     return 0;
+}
+
+/* Private Functions ======================================================= */
+
+/* 셸을 초기화한다. */
+static void init_shell(void) {
+    // 사용자가 루트 권한을 가지고 있는지 확인한다.
+    if (!geteuid()) prompt = YS_MAIN_ROOT_PROMPT;
+}
+
+/* 명령어를 읽고, 공백 문자를 기준으로 명령어를 한 단어씩 자른다. */
+static void read_and_parse(char **argv) {
+    // TODO: ...
 }
