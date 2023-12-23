@@ -31,15 +31,22 @@ extern "C" {
 
 // clang-format off
 
-/* 루트 계정의 프롬프트 메시지 (prompt message)를 나타내는 문자열. */
-#define YS_MAIN_ROOT_PROMPT      "^ # "
+/* 명령 줄의 최대 길이를 나타내는 정수 값. */
+#define YS_MAX_LINE_LENGTH  2048
 
 /* 일반 계정의 프롬프트 메시지 (prompt message)를 나타내는 문자열. */
-#define YS_MAIN_NON_ROOT_PROMPT  "^ $ "
+#define YS_NON_ROOT_PROMPT  "^ $ "
+
+/* 루트 계정의 프롬프트 메시지 (prompt message)를 나타내는 문자열. */
+#define YS_ROOT_PROMPT      "^ # "
 
 // clang-format on
 
 /* Macros ================================================================== */
+
+/* 표준 오류 스트림에 오류 내용을 출력하고, 셸을 종료한다. */
+#define YS_PANIC(str) \
+    perror(str), abort();
 
 /* 표준 오류 스트림에 문자열을 출력한다. */
 #define YS_PRINTF(str) \

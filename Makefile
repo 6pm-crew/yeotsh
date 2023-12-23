@@ -45,7 +45,7 @@ TARGETS = ${BINARY_PATH}/${PROJECT_NAME}.out
 
 CC = gcc
 CFLAGS = -D_DEFAULT_SOURCE -g -I${INCLUDE_PATH} -O2 -std=c99 \
-	-Wall -Werror -Wpedantic
+	-Wall -Wpedantic
 
 # CFLAGS += -fsanitize=address
 

@@ -23,6 +23,8 @@
 /* Includes ================================================================ */
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include <unistd.h>
 
@@ -34,7 +36,7 @@
 static void init_shell(void);
 
 /* 명령어를 읽고, 공백 문자를 기준으로 명령어를 한 단어씩 자른다. */
-static void read_and_parse(char **argv);
+static char **read_and_parse(void);
 
 /* Public Variables ======================================================== */
 
@@ -44,7 +46,7 @@ extern char **environ;
 /* Private Variables ======================================================= */
 
 /* 셸의 프롬프트 메시지 (prompt message)를 나타내는 문자열. */
-static char *prompt = YS_MAIN_NON_ROOT_PROMPT;
+static char *prompt = YS_NON_ROOT_PROMPT;
 
 /* Public Functions ======================================================== */
 
@@ -53,6 +55,8 @@ int main(void) {
 
     for (;;) {
         YS_PRINTF(prompt);
+
+        char **argv = read_and_parse();
 
         // TODO: ...
     }
@@ -65,10 +69,23 @@ int main(void) {
 /* 셸을 초기화한다. */
 static void init_shell(void) {
     // 사용자가 루트 권한을 가지고 있는지 확인한다.
-    if (!geteuid()) prompt = YS_MAIN_ROOT_PROMPT;
+    if (!geteuid()) prompt = YS_ROOT_PROMPT;
 }
 
 /* 명령어를 읽고, 공백 문자를 기준으로 명령어를 한 단어씩 자른다. */
-static void read_and_parse(char **argv) {
+static char **read_and_parse(void) {
+    char line[YS_MAX_LINE_LENGTH];
+
+    if (fgets(line, sizeof line, stdin) == NULL) {
+        // "Ctrl + D" (`EOF`) 입력을 처리한다.
+        if (feof(stdin)) putchar('\n'), exit(EXIT_SUCCESS);
+
+        YS_PANIC("fgets() failed");
+    }
+
+    // 명령 줄의 마지막 개행 문자를 제거한다.
+    line[strcspn(line, "\n")] = '\0';
+
     // TODO: ...
+    return NULL;
 }
