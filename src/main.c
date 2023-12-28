@@ -35,8 +35,8 @@
 /* 셸을 초기화한다. */
 static void init_shell(void);
 
-/* 명령어를 읽고, 공백 문자를 기준으로 명령어를 한 단어씩 자른다. */
-static char **read_and_parse(void);
+/* 명령 줄에서 명령 인수 (argument)를 읽고, 작업을 생성한다. */
+static void parse_and_execute(char *buffer);
 
 /* Public Variables ======================================================== */
 
@@ -56,9 +56,23 @@ int main(void) {
     for (;;) {
         YS_PRINTF(prompt);
 
-        char **argv = read_and_parse();
+        char line[YS_MAX_LINE_LENGTH];
 
-        // TODO: ...
+        if (fgets(line, sizeof line, stdin) == NULL) {
+            // "Ctrl + D" (`EOF`) 입력을 처리한다.
+            if (feof(stdin)) putchar('\n'), exit(EXIT_SUCCESS);
+
+            YS_PANIC("fgets() failed");
+        }
+
+        char *buffer = line;
+
+        // 명령 줄의 맨 앞에 위치한 공백 문자들과 맨 뒤의 개행 문자를 제거한다.
+        for (buffer[strcspn(buffer, "\n")] = '\0';
+            (buffer != NULL) && (*buffer == ' ');
+            buffer++) ;
+
+        parse_and_execute(buffer);
     }
 
     return 0;
@@ -72,20 +86,26 @@ static void init_shell(void) {
     if (!geteuid()) prompt = YS_ROOT_PROMPT;
 }
 
-/* 명령어를 읽고, 공백 문자를 기준으로 명령어를 한 단어씩 자른다. */
-static char **read_and_parse(void) {
-    char line[YS_MAX_LINE_LENGTH];
+/* 명령 줄에서 명령 인수 (argument)를 읽고, 작업을 생성한다. */
+static void parse_and_execute(char *buffer) {
+    if (buffer == NULL) return;
 
-    if (fgets(line, sizeof line, stdin) == NULL) {
-        // "Ctrl + D" (`EOF`) 입력을 처리한다.
-        if (feof(stdin)) putchar('\n'), exit(EXIT_SUCCESS);
+    char *argv[YS_MAX_LINE_LENGTH >> 1];
 
-        YS_PANIC("fgets() failed");
+    int argc = 0;
+
+    // 공백 문자를 기준으로 명령 줄을 한 단어씩 자른다.
+    for (;;) {
+        argv[argc++] = buffer;
+
+        if ((buffer = strchr(buffer, ' ')) == NULL) break;
+
+        for (*buffer = '\0', ++buffer; 
+            (buffer != NULL) && (*buffer == ' '); 
+            buffer++) ;
     }
 
-    // 명령 줄의 마지막 개행 문자를 제거한다.
-    line[strcspn(line, "\n")] = '\0';
+    argv[argc] = NULL;
 
-    // TODO: ...
-    return NULL;
+    // TODO: `fork() + execve()`?
 }
