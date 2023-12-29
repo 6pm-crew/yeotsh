@@ -56,8 +56,8 @@ extern "C" {
     perror(str), abort();
 
 /* 표준 오류 스트림에 문자열을 출력한다. */
-#define YS_PRINTF(str) \
-    fprintf(stderr, "%s", str), fflush(stderr);
+#define YS_PRINTF(...) \
+    fprintf(stderr, __VA_ARGS__), fflush(stderr);
 
 /* Typedefs ================================================================ */
 

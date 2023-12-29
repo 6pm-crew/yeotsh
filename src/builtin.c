@@ -100,7 +100,13 @@ static void builtin_cd(char *argv[]) {
 
 /* 셸 프로세스를 종료한다. */
 static void builtin_exit(char *argv[]) {
-    // TODO: ...
+    int exit_code = 0;
+
+    if (argv[1] != NULL) exit_code = strtol(argv[1], NULL, 10);
+
+    YS_PRINTF("Goodbye!\n");
+    
+    exit(exit_code);
 }
 
 /* 작업을 포그라운드에서 실행한다. */
