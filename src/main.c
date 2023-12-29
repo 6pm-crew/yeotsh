@@ -22,10 +22,6 @@
 
 /* Includes ================================================================ */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
 #include <unistd.h>
 
 #include "yeotsh.h"
@@ -90,7 +86,7 @@ static void init_shell(void) {
 static void parse_and_execute(char *buffer) {
     if (buffer == NULL) return;
 
-    char *argv[YS_MAX_LINE_LENGTH >> 1];
+    char *argv[(YS_MAX_LINE_LENGTH >> 1) + 1];
 
     int argc = 0;
 
@@ -98,6 +94,7 @@ static void parse_and_execute(char *buffer) {
     for (;;) {
         argv[argc++] = buffer;
 
+        // 더 이상 공백 문자를 찾을 수 없을 때까지 반복한다.
         if ((buffer = strchr(buffer, ' ')) == NULL) break;
 
         for (*buffer = '\0', ++buffer; 
@@ -105,7 +102,23 @@ static void parse_and_execute(char *buffer) {
             buffer++) ;
     }
 
-    argv[argc] = NULL;
+    bool run_in_bg = (*argv[argc - 1] == '&');
 
-    // TODO: `fork() + execve()`?
+    /*
+        "The `argv` and `environ` arrays are each terminated by a null pointer."
+        - https://pubs.opengroup.org/onlinepubs/9699919799/functions/exec.html
+    */
+
+    argv[(argc -= run_in_bg)] = NULL;
+
+    struct builtin_command bc = { .func = NULL };
+
+    // 빌트인 명령어를 실행한다.
+    if (is_builtin_command((const char **) argv, &bc)) {
+        if (bc.func != NULL) bc.func(argv);
+
+        return;
+    }
+
+    // TODO: ...
 }

@@ -27,6 +27,13 @@
 extern "C" {
 #endif
 
+/* Includes ================================================================ */
+
+#include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
 /* User-Defined Macros ===================================================== */
 
 // clang-format off
@@ -51,6 +58,19 @@ extern "C" {
 /* 표준 오류 스트림에 문자열을 출력한다. */
 #define YS_PRINTF(str) \
     fprintf(stderr, "%s", str), fflush(stderr);
+
+/* Typedefs ================================================================ */
+
+/* 빌트인 명령어를 나타내는 구조체. */
+struct builtin_command {
+    const char *name;            // 빌트인 명령어의 이름.
+    void (*func)(char *argv[]);  // 실행할 함수의 메모리 주소.
+};
+
+/* (From 'builtin.c') ====================================================== */
+
+/* `argv[0]`이 빌트인 명령어인지 확인한다. */
+bool is_builtin_command(const char *argv[], struct builtin_command *bc);
 
 #ifdef __cplusplus
 }

@@ -39,6 +39,7 @@ INCLUDE_PATH = include
 SOURCE_PATH = src
 
 OBJECTS = \
+	${SOURCE_PATH}/builtin.o  \
 	${SOURCE_PATH}/main.o
 
 TARGETS = ${BINARY_PATH}/${PROJECT_NAME}.out
