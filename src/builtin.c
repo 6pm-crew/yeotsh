@@ -128,7 +128,7 @@ static void builtin_kill(int argc, char *argv[]) {
     // Signal이 들어왔을 경우 signal 변수 값을 다시 조정한다.
     if (argv[1][0] == '-') {
         // 시그널의 숫자 모두 숫자인지 확인한다.
-        if (!isnumber(argv[1] + 1)) {
+        if (!is_number(argv[1] + 1)) {
             YS_PRINTF("invalid signal number\n");
             return;
         }
@@ -137,7 +137,7 @@ static void builtin_kill(int argc, char *argv[]) {
     }
     for (; start_pos < argc; start_pos++) {
         // 들어오는 인자가 숫자임을 확인
-        if (!isnumber(argv[start_pos])) {
+        if (!is_number(argv[start_pos])) {
             YS_PRINTF("illegal pid\n");
             return;
         }

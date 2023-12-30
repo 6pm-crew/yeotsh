@@ -33,8 +33,6 @@ extern "C" {
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <ctype.h>
-#include <sys/types.h>
 
 /* User-Defined Macros ===================================================== */
 
@@ -77,5 +75,8 @@ bool is_builtin_command(const char *argv[], struct builtin_command *bc);
 #endif
 
 /* (From 'utils.c') ====================================================== */
-int isnumber(char *string);
+
+/* `str`이 숫자로 변환 가능한 문자열인지 확인한다. */
+bool is_number(char *str);
+
 #endif  // `YEOTSH_H`
