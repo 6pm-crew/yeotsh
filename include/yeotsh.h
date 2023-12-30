@@ -54,10 +54,10 @@ extern "C" {
 /* Macros ================================================================== */
 
 /* 표준 오류 스트림에 오류 내용을 출력하고, 셸을 종료한다. */
-#define YS_PANIC(str) perror(str), abort();
+#define YS_PANIC(str) perror(str), abort()
 
 /* 표준 오류 스트림에 문자열을 출력한다. */
-#define YS_PRINTF(...) fprintf(stderr, __VA_ARGS__), fflush(stderr);
+#define YS_PRINTF(...) fprintf(stderr, __VA_ARGS__), fflush(stderr)
 
 /* Typedefs ================================================================ */
 
