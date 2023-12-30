@@ -33,6 +33,7 @@ extern "C" {
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <getopt.h>
 
 /* User-Defined Macros ===================================================== */
 
@@ -52,19 +53,17 @@ extern "C" {
 /* Macros ================================================================== */
 
 /* 표준 오류 스트림에 오류 내용을 출력하고, 셸을 종료한다. */
-#define YS_PANIC(str) \
-    perror(str), abort();
+#define YS_PANIC(str) perror(str), abort();
 
 /* 표준 오류 스트림에 문자열을 출력한다. */
-#define YS_PRINTF(...) \
-    fprintf(stderr, __VA_ARGS__), fflush(stderr);
+#define YS_PRINTF(...) fprintf(stderr, __VA_ARGS__), fflush(stderr);
 
 /* Typedefs ================================================================ */
 
 /* 빌트인 명령어를 나타내는 구조체. */
 struct builtin_command {
-    const char *name;            // 빌트인 명령어의 이름.
-    void (*func)(char *argv[]);  // 실행할 함수의 메모리 주소.
+    const char *name;                      // 빌트인 명령어의 이름.
+    void (*func)(int argc, char *argv[]);  // 실행할 함수의 메모리 주소.
 };
 
 /* (From 'builtin.c') ====================================================== */

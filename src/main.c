@@ -65,8 +65,9 @@ int main(void) {
 
         // 명령 줄의 맨 앞에 위치한 공백 문자들과 맨 뒤의 개행 문자를 제거한다.
         for (buffer[strcspn(buffer, "\n")] = '\0';
-            (buffer != NULL) && (*buffer == ' ');
-            buffer++) ;
+             (buffer != NULL) && (*buffer == ' ');
+             buffer++)
+            ;
 
         parse_and_execute(buffer);
     }
@@ -97,9 +98,9 @@ static void parse_and_execute(char *buffer) {
         // 더 이상 공백 문자를 찾을 수 없을 때까지 반복한다.
         if ((buffer = strchr(buffer, ' ')) == NULL) break;
 
-        for (*buffer = '\0', ++buffer; 
-            (buffer != NULL) && (*buffer == ' '); 
-            buffer++) ;
+        for (*buffer = '\0', ++buffer; (buffer != NULL) && (*buffer == ' ');
+             buffer++)
+            ;
     }
 
     bool run_in_bg = (*argv[argc - 1] == '&');
@@ -115,7 +116,7 @@ static void parse_and_execute(char *buffer) {
 
     // 빌트인 명령어를 실행한다.
     if (is_builtin_command((const char **) argv, &bc)) {
-        if (bc.func != NULL) bc.func(argv);
+        if (bc.func != NULL) bc.func(argc, argv);
 
         return;
     }

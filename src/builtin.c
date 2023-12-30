@@ -23,50 +23,47 @@
 /* Includes ================================================================ */
 
 #include "yeotsh.h"
+#include <bits/getopt_core.h>
+#include <bits/getopt_ext.h>
 
 /* Private Function Prototypes ============================================= */
 
 /* 작업을 백그라운드에서 실행한다. */
-static void builtin_bg(char *argv[]);
+static void builtin_bg(int argc, char *argv[]);
 
 /* 현재 디렉토리 (working directory)를 변경한다. */
-static void builtin_cd(char *argv[]);
+static void builtin_cd(int argc, char *argv[]);
 
 /* 셸 프로세스를 종료한다. */
-static void builtin_exit(char *argv[]);
+static void builtin_exit(int argc, char *argv[]);
 
 /* 작업을 포그라운드에서 실행한다. */
-static void builtin_fg(char *argv[]);
+static void builtin_fg(int argc, char *argv[]);
 
 /* 빌트인 명령어 목록을 출력한다. */
-static void builtin_help(char *argv[]);
+static void builtin_help(int argc, char *argv[]);
 
 /* 작업 목록을 출력한다. */
-static void builtin_jobs(char *argv[]);
+static void builtin_jobs(int argc, char *argv[]);
 
 /* 작업에 시그널을 보낸다. */
-static void builtin_kill(char *argv[]);
+static void builtin_kill(int argc, char *argv[]);
 
 /* 현재 디렉토리 (working directory)를 출력한다. */
-static void builtin_pwd(char *argv[]);
+static void builtin_pwd(int argc, char *argv[]);
 
 /* 작업 또는 프로세스가 종료될 때까지 기다린다. */
-static void builtin_wait(char *argv[]);
+static void builtin_wait(int argc, char *argv[]);
 
 /* Constants =============================================================== */
 
 /* 빌트인 명령어의 실행 정보가 저장되어 있는 배열. */
 static const struct builtin_command builtin_commands[] = {
-    { "bg",   builtin_bg   },
-    { "cd",   builtin_cd   },
-    { "exit", builtin_exit },
-    { "fg",   builtin_fg   },
-    { "help", builtin_help },
-    { "jobs", builtin_jobs },
-    { "kill", builtin_kill },
-    { "pwd",  builtin_pwd  },
-    { "wait", builtin_wait },
-    { NULL,   NULL         }
+    { "bg", builtin_bg },     { "cd", builtin_cd },
+    { "exit", builtin_exit }, { "fg", builtin_fg },
+    { "help", builtin_help }, { "jobs", builtin_jobs },
+    { "kill", builtin_kill }, { "pwd", builtin_pwd },
+    { "wait", builtin_wait }, { NULL, NULL }
 };
 
 /* Public Functions ======================================================== */
@@ -82,59 +79,59 @@ bool is_builtin_command(const char *argv[], struct builtin_command *bc) {
 
             return true;
         }
-    
+
     return false;
 }
 
 /* Private Functions ======================================================= */
 
 /* 작업을 백그라운드에서 실행한다. */
-static void builtin_bg(char *argv[]) {
+static void builtin_bg(int argc, char *argv[]) {
     // TODO: ...
 }
 
 /* 현재 디렉토리 (working directory)를 변경한다. */
-static void builtin_cd(char *argv[]) {
+static void builtin_cd(int argc, char *argv[]) {
     // TODO: ...
 }
 
 /* 셸 프로세스를 종료한다. */
-static void builtin_exit(char *argv[]) {
+static void builtin_exit(int argc, char *argv[]) {
     int exit_code = 0;
 
     if (argv[1] != NULL) exit_code = strtol(argv[1], NULL, 10);
 
     YS_PRINTF("Goodbye!\n");
-    
+
     exit(exit_code);
 }
 
 /* 작업을 포그라운드에서 실행한다. */
-static void builtin_fg(char *argv[]) {
+static void builtin_fg(int argc, char *argv[]) {
     // TODO: ...
 }
 
 /* 빌트인 명령어 목록을 출력한다. */
-static void builtin_help(char *argv[]) {
+static void builtin_help(int argc, char *argv[]) {
     // TODO: ...
 }
 
 /* 작업 목록을 출력한다. */
-static void builtin_jobs(char *argv[]) {
+static void builtin_jobs(int argc, char *argv[]) {
     // TODO: ...
 }
 
 /* 작업에 시그널을 보낸다. */
-static void builtin_kill(char *argv[]) {
+static void builtin_kill(int argc, char *argv[]) {
     // TODO: ...
 }
 
 /* 현재 디렉토리 (working directory)를 출력한다. */
-static void builtin_pwd(char *argv[]) {
+static void builtin_pwd(int argc, char *argv[]) {
     // TODO: ...
 }
 
 /* 작업 또는 프로세스가 종료될 때까지 기다린다. */
-static void builtin_wait(char *argv[]) {
+static void builtin_wait(int argc, char *argv[]) {
     // TODO: ...
 }
