@@ -30,7 +30,7 @@
 /* Public Functions ======================================================== */
 
 /* `str`이 숫자로 변환 가능한 문자열인지 확인한다. */
-bool is_number(char *str) {
+bool is_number(const char *str) {
     for (int i = 0; str[i] != '\0'; i++)
         if (!isdigit(str[i])) return false;
     
