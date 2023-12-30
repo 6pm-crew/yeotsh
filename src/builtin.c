@@ -23,8 +23,8 @@
 /* Includes ================================================================ */
 
 #include "yeotsh.h"
-#include <bits/getopt_core.h>
-#include <bits/getopt_ext.h>
+#include <errno.h>
+#include <signal.h>
 
 /* Private Function Prototypes ============================================= */
 
@@ -123,7 +123,32 @@ static void builtin_jobs(int argc, char *argv[]) {
 
 /* 작업에 시그널을 보낸다. */
 static void builtin_kill(int argc, char *argv[]) {
-    // TODO: ...
+    int signal = 9;
+    int start_pos = 1;
+    // Signal이 들어왔을 경우 signal 변수 값을 다시 조정한다.
+    if (argv[1][0] == '-') {
+        // 시그널의 숫자 모두 숫자인지 확인한다.
+        if (!isnumber(argv[1] + 1)) {
+            YS_PRINTF("invalid signal number\n");
+            return;
+        }
+        signal = atoi(argv[1] + 1);
+        start_pos++;
+    }
+    for (; start_pos < argc; start_pos++) {
+        // 들어오는 인자가 숫자임을 확인
+        if (!isnumber(argv[start_pos])) {
+            YS_PRINTF("illegal pid\n");
+            return;
+        }
+        if (kill(atoi(argv[start_pos]), signal) < 0) {
+            switch (errno) {
+                case ESRCH:
+                    YS_PRINTF("pid not found\n");
+                    return;
+            }
+        }
+    }
 }
 
 /* 현재 디렉토리 (working directory)를 출력한다. */
