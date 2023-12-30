@@ -85,7 +85,7 @@ static void init_shell(void) {
 
 /* 명령 줄에서 명령 인수 (argument)를 읽고, 작업을 생성한다. */
 static void parse_and_execute(char *buffer) {
-    if (buffer == NULL) return;
+    if (buffer == NULL || *buffer == '\0') return;
 
     char *argv[(YS_MAX_LINE_LENGTH >> 1) + 1];
 
@@ -103,6 +103,7 @@ static void parse_and_execute(char *buffer) {
             ;
     }
 
+    // 명령 줄의 마지막 문자가 '&'일 경우, 작업을 백그라운드로 실행한다.
     bool run_in_bg = (*argv[argc - 1] == '&');
 
     /*
@@ -121,5 +122,15 @@ static void parse_and_execute(char *buffer) {
         return;
     }
 
-    // TODO: ...
+    pid_t pid;
+
+    // 자식 프로세스를 생성한다.
+    if ((pid = fork()) == 0) {
+        // TODO: 시그널 핸들러 구현하기
+        if (execvp(argv[0], argv) < 0)
+			YS_PRINTF("%s: command not found\n", argv[0]), exit(0);
+    }
+
+    // TODO: 작업 관리 기능 구현하기
+    usleep(100000);
 }
