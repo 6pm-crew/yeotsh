@@ -22,9 +22,10 @@
 
 /* Includes ================================================================ */
 
-#include "yeotsh.h"
 #include <errno.h>
 #include <signal.h>
+
+#include "yeotsh.h"
 
 /* Private Function Prototypes ============================================= */
 
@@ -123,29 +124,49 @@ static void builtin_jobs(int argc, char *argv[]) {
 
 /* 작업에 시그널을 보낸다. */
 static void builtin_kill(int argc, char *argv[]) {
-    int signal = 9;
-    int start_pos = 1;
-    // Signal이 들어왔을 경우 signal 변수 값을 다시 조정한다.
+    if (argc < 3) {
+        YS_PRINTF("Usage: %s [-signal_number] [pid]\n", argv[0]);
+
+        return;
+    }
+
+    int signal_number = 9, start_pos = 1;
+
+    // `signal_number`의 값을 변경한다.
     if (argv[1][0] == '-') {
-        // 시그널의 숫자 모두 숫자인지 확인한다.
+        // 시그널 번호에 해당하는 문자열이 숫자로 변환 가능한지 확인한다.
         if (!is_number(argv[1] + 1)) {
-            YS_PRINTF("invalid signal number\n");
+            YS_PRINTF("%s: invalid signal number\n", argv[0]);
+
             return;
         }
-        signal = atoi(argv[1] + 1);
+
+        signal_number = atoi(argv[1] + 1);
+
         start_pos++;
     }
+
     for (; start_pos < argc; start_pos++) {
-        // 들어오는 인자가 숫자임을 확인
+        // 각 인자가 숫자로 변환 가능한지 확인한다.
         if (!is_number(argv[start_pos])) {
-            YS_PRINTF("illegal pid\n");
+            YS_PRINTF("%s: illegal number\n", argv[0]);
+
             return;
         }
-        if (kill(atoi(argv[start_pos]), signal) < 0) {
+
+        pid_t pid = strtol(argv[start_pos], NULL, 10);
+
+        if (kill(pid, signal_number) < 0) {
             switch (errno) {
                 case ESRCH:
-                    YS_PRINTF("pid not found\n");
-                    return;
+                    YS_PRINTF("%s: no such process\n", argv[0]);
+
+                    break;
+
+                default:
+                    YS_PRINTF("%s: unknown error\n", argv[0]);
+
+                    break;
             }
         }
     }
