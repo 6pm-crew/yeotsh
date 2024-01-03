@@ -194,7 +194,7 @@ static void builtin_pwd(int argc, char *argv[]) {
     if (path == NULL) {
         switch (errno) {
             case EACCES:
-                YS_PRINTF("%s: access denied for %s\n", argv[0], path);
+                YS_PRINTF("%s: permission denied\n", argv[0]);
 
                 break;
 
