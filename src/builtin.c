@@ -25,6 +25,8 @@
 #include <errno.h>
 #include <signal.h>
 
+#include <unistd.h>
+
 #include "yeotsh.h"
 
 /* Private Function Prototypes ============================================= */
@@ -127,7 +129,7 @@ static void builtin_kill(int argc, char *argv[]) {
     if (argc < 3) {
         YS_PRINTF("Usage: %s [-signal_number] [pid]\n", argv[0]);
 
-        return;
+        exit(EXIT_FAILURE);
     }
 
     int signal_number = 9, start_pos = 1;
@@ -138,7 +140,7 @@ static void builtin_kill(int argc, char *argv[]) {
         if (!is_number(argv[1] + 1)) {
             YS_PRINTF("%s: invalid signal number\n", argv[0]);
 
-            return;
+            exit(EXIT_FAILURE);
         }
 
         signal_number = atoi(argv[1] + 1);
@@ -151,7 +153,7 @@ static void builtin_kill(int argc, char *argv[]) {
         if (!is_number(argv[start_pos])) {
             YS_PRINTF("%s: illegal number\n", argv[0]);
 
-            return;
+            exit(EXIT_FAILURE);
         }
 
         pid_t pid = strtol(argv[start_pos], NULL, 10);
@@ -168,13 +170,46 @@ static void builtin_kill(int argc, char *argv[]) {
 
                     break;
             }
+
+            exit(EXIT_FAILURE);
         }
     }
 }
 
 /* 현재 디렉토리 (working directory)를 출력한다. */
 static void builtin_pwd(int argc, char *argv[]) {
-    // TODO: ...
+    // 파일 경로의 최대 길이를 구한다.
+    size_t size = pathconf(".", _PC_PATH_MAX);
+
+    char *buffer = malloc(size);
+
+    if (buffer == NULL) {
+        YS_PRINTF("%s: unable to allocate %zu bytes\n", argv[0], size);
+
+        exit(EXIT_FAILURE);
+    }
+    
+    const char *path = getcwd(buffer, size);
+
+    if (path == NULL) {
+        switch (errno) {
+            case EACCES:
+                YS_PRINTF("%s: access denied for %s\n", argv[0], path);
+
+                break;
+
+            default:
+                YS_PRINTF("%s: unknown error\n", argv[0]);
+
+                break;
+        }
+
+        exit(EXIT_FAILURE);
+    }
+
+    YS_PRINTF("%s\n", path);
+
+    free(buffer);
 }
 
 /* 작업 또는 프로세스가 종료될 때까지 기다린다. */
