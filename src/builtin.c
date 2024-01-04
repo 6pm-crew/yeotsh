@@ -25,6 +25,7 @@
 #include <errno.h>
 #include <signal.h>
 
+#include <sys/types.h>
 #include <unistd.h>
 
 #include "yeotsh.h"
@@ -95,7 +96,38 @@ static void builtin_bg(int argc, char *argv[]) {
 
 /* 현재 디렉토리 (working directory)를 변경한다. */
 static void builtin_cd(int argc, char *argv[]) {
-    // TODO: ...
+    char *path = NULL;
+
+    if (argc <= 1) {
+        // `HOME` 환경 변수가 정의되어 있지 않다면, 아무 것도 하지 않는다.
+        if ((path = getenv("HOME")) == NULL) return;
+    }
+
+    path = argv[1];
+
+    if (chdir(path) < 0) {
+        switch (errno) {
+            case EACCES:
+                YS_PRINTF("%s: permission denied\n", argv[0]);
+
+                break;
+
+            case ENOENT:
+                YS_PRINTF("%s: no such directory\n", argv[0]);
+
+                break;
+
+            case ENOTDIR:
+                YS_PRINTF("%s: not a directory\n", argv[0]);
+
+                break;
+
+            default:
+                YS_PRINTF("%s: unknown error\n", argv[0]);
+
+                break;
+        }
+    }
 }
 
 /* 셸 프로세스를 종료한다. */
@@ -129,7 +161,7 @@ static void builtin_kill(int argc, char *argv[]) {
     if (argc < 3) {
         YS_PRINTF("Usage: %s [-signal_number] [pid]\n", argv[0]);
 
-        exit(EXIT_FAILURE);
+        return;
     }
 
     int signal_number = 9, start_pos = 1;
@@ -140,7 +172,7 @@ static void builtin_kill(int argc, char *argv[]) {
         if (!is_number(argv[1] + 1)) {
             YS_PRINTF("%s: invalid signal number\n", argv[0]);
 
-            exit(EXIT_FAILURE);
+            return;
         }
 
         signal_number = atoi(argv[1] + 1);
@@ -153,7 +185,7 @@ static void builtin_kill(int argc, char *argv[]) {
         if (!is_number(argv[start_pos])) {
             YS_PRINTF("%s: illegal number\n", argv[0]);
 
-            exit(EXIT_FAILURE);
+            return;
         }
 
         pid_t pid = strtol(argv[start_pos], NULL, 10);
@@ -170,8 +202,6 @@ static void builtin_kill(int argc, char *argv[]) {
 
                     break;
             }
-
-            exit(EXIT_FAILURE);
         }
     }
 }
@@ -186,12 +216,14 @@ static void builtin_pwd(int argc, char *argv[]) {
     if (buffer == NULL) {
         YS_PRINTF("%s: unable to allocate %zu bytes\n", argv[0], size);
 
-        exit(EXIT_FAILURE);
+        return;
     }
     
     const char *path = getcwd(buffer, size);
 
-    if (path == NULL) {
+    if (path != NULL) {
+        YS_PRINTF("%s\n", path);
+    } else {
         switch (errno) {
             case EACCES:
                 YS_PRINTF("%s: permission denied\n", argv[0]);
@@ -203,11 +235,7 @@ static void builtin_pwd(int argc, char *argv[]) {
 
                 break;
         }
-
-        exit(EXIT_FAILURE);
     }
-
-    YS_PRINTF("%s\n", path);
 
     free(buffer);
 }
