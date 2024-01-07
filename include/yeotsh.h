@@ -70,13 +70,18 @@ struct builtin_command {
 /* `argv[0]`이 빌트인 명령어인지 확인한다. */
 bool is_builtin_command(const char *argv[], struct builtin_command *bc);
 
-#ifdef __cplusplus
-}
-#endif
+/* (From 'jobs.c') ========================================================= */
 
-/* (From 'utils.c') ====================================================== */
+// TODO: ...
+
+/* (From 'utils.c') ======================================================== */
 
 /* `str`이 숫자로 변환 가능한 문자열인지 확인한다. */
 bool is_number(const char *str);
+
+// 주의: 함수 원형은 반드시 이 줄 위에 선언할 것!
+#ifdef __cplusplus
+}
+#endif
 
 #endif  // `YEOTSH_H`

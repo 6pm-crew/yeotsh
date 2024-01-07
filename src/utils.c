@@ -23,6 +23,7 @@
 /* Includes ================================================================ */
 
 #include <ctype.h>
+
 #include <sys/types.h>
 
 #include "yeotsh.h"
