@@ -3,7 +3,18 @@
 [![Code Size Badge](https://img.shields.io/github/languages/code-size/6pm-crew/yeotsh?color=e73a17)](https://github.com/6pm-crew/yeotsh)
 [![License Badge](https://img.shields.io/github/license/6pm-crew/yeotsh?color=b82e12)](https://github.com/6pm-crew/yeotsh/blob/main/LICENSE)
 
-A tiny command interpreter for GNU/Linux, inspired by the Thompson shell.
+A tiny command interpreter for GNU/Linux, inspired by the [Thompson shell](https://v6sh.org/src/sh.c).
+
+## Features
+
+> *WARNING: This project is not POSIX-compliant!*
+
+TODO: ...
+
+## References
+
+- http://csapp.cs.cmu.edu/3e/home.html
+- https://www.gnu.org/software/libc/manual/html_node/Implementing-a-Shell.html
 
 ## License
 
