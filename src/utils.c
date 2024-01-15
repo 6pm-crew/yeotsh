@@ -24,8 +24,6 @@
 
 #include <ctype.h>
 
-#include <sys/types.h>
-
 #include "yeotsh.h"
 
 /* Public Functions ======================================================== */

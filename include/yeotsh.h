@@ -34,6 +34,9 @@ extern "C" {
 #include <stdlib.h>
 #include <string.h>
 
+#include <sys/types.h>
+#include <unistd.h>
+
 /* User-Defined Macros ===================================================== */
 
 // clang-format off

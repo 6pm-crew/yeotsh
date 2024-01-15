@@ -22,8 +22,6 @@
 
 /* Includes ================================================================ */
 
-#include <unistd.h>
-
 #include "yeotsh.h"
 
 /* Private Function Prototypes ============================================= */
@@ -50,7 +48,7 @@ int main(void) {
     init_shell();
 
     for (;;) {
-        YS_PRINTF(prompt);
+        YS_PRINTF("%s", prompt);
 
         char line[YS_MAX_LINE_LENGTH];
 
@@ -125,12 +123,29 @@ static void parse_and_execute(char *buffer) {
     pid_t pid;
 
     // 자식 프로세스를 생성한다.
-    if ((pid = fork()) == 0) {
+    if ((pid = fork()) < 0) {
+        YS_PANIC("fork() failed");
+    } else if (pid == 0) {
+        // 자식 프로세스를 새로운 프로세스 그룹에 추가한다.
+        setpgid(0, 0);
+
         // TODO: 시그널 핸들러 구현하기
         if (execvp(argv[0], argv) < 0)
             YS_PRINTF("%s: command not found\n", argv[0]), exit(0);
     }
 
-    // TODO: 작업 관리 기능 구현하기
+    /*
+        자식 프로세스의 그룹이 생성되기 전에 셸 프로세스가 먼저 실행되는
+        "경쟁 상태" (race condition)가 발생하지 않도록 한다.
+    */
+    setpgid(0, 0);
+
+    if (!run_in_bg) {
+        // TODO: ...
+    } else {
+        // TODO: ...
+    }
+
+    // TODO: ...
     usleep(100000);
 }
