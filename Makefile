@@ -40,7 +40,6 @@ SOURCE_PATH = src
 
 OBJECTS = \
 	${SOURCE_PATH}/builtins.o  \
-	${SOURCE_PATH}/jobs.o      \
 	${SOURCE_PATH}/main.o      \
 	${SOURCE_PATH}/utils.o
 

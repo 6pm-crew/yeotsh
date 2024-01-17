@@ -14,6 +14,8 @@ TODO: ...
 ## References
 
 - http://csapp.cs.cmu.edu/3e/home.html
+- https://pubs.opengroup.org/onlinepubs/000095399/utilities/sh.html
+- https://v6sh.org/man/_sh.1.html
 - https://www.gnu.org/software/libc/manual/html_node/Implementing-a-Shell.html
 
 ## License

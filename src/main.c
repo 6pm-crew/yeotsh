@@ -29,7 +29,7 @@
 /* 셸을 초기화한다. */
 static void init_shell(void);
 
-/* 명령 줄에서 명령 인수 (argument)를 읽고, 작업을 생성한다. */
+/* 명령 줄에서 명령 인수 (argument)를 읽는다. */
 static void parse_and_execute(char *buffer);
 
 /* Public Variables ======================================================== */
@@ -81,7 +81,7 @@ static void init_shell(void) {
     if (!geteuid()) prompt = YS_ROOT_PROMPT;
 }
 
-/* 명령 줄에서 명령 인수 (argument)를 읽고, 작업을 생성한다. */
+/* 명령 줄에서 명령 인수 (argument)를 읽는다. */
 static void parse_and_execute(char *buffer) {
     if (buffer == NULL || *buffer == '\0') return;
 
@@ -120,32 +120,5 @@ static void parse_and_execute(char *buffer) {
         return;
     }
 
-    pid_t pid;
-
-    // 자식 프로세스를 생성한다.
-    if ((pid = fork()) < 0) {
-        YS_PANIC("fork() failed");
-    } else if (pid == 0) {
-        // 자식 프로세스를 새로운 프로세스 그룹에 추가한다.
-        setpgid(0, 0);
-
-        // TODO: 시그널 핸들러 구현하기
-        if (execvp(argv[0], argv) < 0)
-            YS_PRINTF("%s: command not found\n", argv[0]), exit(0);
-    }
-
-    /*
-        자식 프로세스의 그룹이 생성되기 전에 셸 프로세스가 먼저 실행되는
-        "경쟁 상태" (race condition)가 발생하지 않도록 한다.
-    */
-    setpgid(0, 0);
-
-    if (!run_in_bg) {
-        // TODO: ...
-    } else {
-        // TODO: ...
-    }
-
     // TODO: ...
-    usleep(100000);
 }
